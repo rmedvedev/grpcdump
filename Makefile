@@ -12,7 +12,7 @@ test:
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 go build .
+	CGO_ENABLED=0 go build cmd/grpcdump/main.go
 
 .PHONY: release
 release:
