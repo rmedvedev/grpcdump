@@ -80,10 +80,6 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 	case *http2.DataFrame:
 
 		stream, _ := frameReader.Streams.Get(connKey, streamID)
-		// if !ok {
-		// stream, ok = frameReader.Streams.Get(dstSrcKey, streamID)
-		// fmt.Println(stream)
-		// }
 
 		grpcMessage, err := grpc.Decode(stream.Path, frame, stream.Type)
 		if err != nil {
@@ -99,13 +95,6 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 		}
 
 		return http2Model, nil
-
-		//dataBuf, ok := dataBufs[streamID]
-		//if !ok {
-		//	dataBuf = bytes.Buffer{}
-		//	dataBufs[streamID] = dataBuf
-		//}
-		// grpc.DumpMsg(connectionKey, stream.Path, frame, stream.Type)
 	}
 
 	return nil, nil

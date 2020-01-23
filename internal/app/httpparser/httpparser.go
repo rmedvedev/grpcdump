@@ -120,8 +120,6 @@ func tryReadHttpResponse(packet *models.Packet, prefix string, buf *bufio.Reader
 			return nil, err
 		}
 
-		//httpResponse.Body = resp.Body
-
 		_, err = buf.Discard(int(resp.ContentLength))
 		if err != nil {
 			return nil, err
@@ -156,8 +154,6 @@ func tryReadHttp2(packet *models.Packet, prefix string, buf *bufio.Reader, frame
 }
 
 func (h *httpStream) run() {
-	// 1 request, 2 response, 0 unkonwn
-
 	buf := bufio.NewReader(&h.r)
 	framer := http2.NewFramer(ioutil.Discard, buf)
 	framer.ReadMetaHeaders = hpack.NewDecoder(4096, nil)

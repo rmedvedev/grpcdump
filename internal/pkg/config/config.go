@@ -11,7 +11,6 @@ type Config struct {
 	Port           uint
 	LogMetaHeaders string
 	LoggerLevel    string
-	Fname          string
 	ColorOutput    bool
 	JSONOutput     bool
 	ProtoPaths     string
@@ -22,7 +21,6 @@ var config *Config
 
 var (
 	iface          = flag.String("i", "eth0", "Interface to get packets from")
-	fname          = flag.String("f", "", "Filename for read from")
 	port           = flag.Uint("p", 80, "TCP port")
 	logMetaHeaders = flag.String("meta", "*", "Comma separated list of properties meta info for http2")
 	loggerLevel    = flag.String("log-level", "info", "Logger level")
@@ -41,7 +39,6 @@ func Init() {
 		*port,
 		*logMetaHeaders,
 		*loggerLevel,
-		*fname,
 		*colorOutput,
 		*jsonOutput,
 		*protoPaths,
