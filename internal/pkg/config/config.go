@@ -26,7 +26,7 @@ var (
 	loggerLevel    = flag.String("log-level", "info", "Logger level")
 	colorOutput    = flag.Bool("color", false, "Output with color")
 	jsonOutput     = flag.Bool("json", false, "Json output")
-	protoPaths     = flag.String("proto-path", ".", "Paths with proto files")
+	protoPaths     = flag.String("proto-path", "", "Paths with proto files")
 	protoFiles     = flag.String("proto-files", "", "Names of proto files")
 )
 

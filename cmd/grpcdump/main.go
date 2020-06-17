@@ -21,9 +21,12 @@ func main() {
 	config.Init()
 	cfg := config.GetConfig()
 
-	protoprovider.Init(cfg.ProtoPaths, cfg.ProtoFiles)
+	err := protoprovider.Init(cfg.ProtoPaths, cfg.ProtoFiles)
+	if err != nil {
+		logrus.Fatal("Proto files init error: ", err)
+	}
 
-	err := logger.Init(config.GetConfig().LoggerLevel)
+	err = logger.Init(config.GetConfig().LoggerLevel)
 	if err != nil {
 		logrus.Fatal("Logger init error: ", err)
 	}

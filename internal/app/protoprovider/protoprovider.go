@@ -26,6 +26,9 @@ func GetProtoByPath(path string) (*ProtoMethod, bool) {
 
 //Init ...
 func Init(importPaths string, protoFiles []string) error {
+	if importPaths == "" || len(protoFiles) == 0 {
+		return nil
+	}
 
 	fileNames, err := protoparse.ResolveFilenames([]string{importPaths}, protoFiles...)
 	if err != nil {
