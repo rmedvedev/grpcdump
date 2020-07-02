@@ -42,6 +42,7 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 	switch frame := frame.(type) {
 	case *http2.MetaHeadersFrame:
 		metaHeaders := make(map[string]string)
+		isTrailer := false
 		for _, hf := range frame.Fields {
 			metaHeaders[hf.Name] = hf.Value
 			if hf.Name == ":path" {
@@ -71,11 +72,21 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 					connKey,
 					stream,
 				)
+			} else if hf.Name == "grpc-status" {
+				stream, _ = frameReader.Streams.Get(connKey, streamID)
+				isTrailer = true
 			}
 		}
 
 		if stream != nil {
-			stream.MetaHeaders = metaHeaders
+			if isTrailer {
+				for key, value := range metaHeaders {
+					stream.MetaHeaders[key] = value
+				}
+				return models.NewHttp2Response(packet, stream, stream.ResponseGrpcMessage), nil
+			} else {
+				stream.MetaHeaders = metaHeaders
+			}
 		}
 	case *http2.DataFrame:
 
@@ -86,15 +97,12 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 			return nil, err
 		}
 
-		var http2Model models.RenderModel
 		switch stream.Type {
 		case models.RequestType:
-			http2Model = models.NewHttp2Request(packet, stream, grpcMessage)
+			return models.NewHttp2Request(packet, stream, grpcMessage), nil
 		case models.ResponseType:
-			http2Model = models.NewHttp2Response(packet, stream, grpcMessage)
+			stream.ResponseGrpcMessage = grpcMessage
 		}
-
-		return http2Model, nil
 	}
 
 	return nil, nil

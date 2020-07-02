@@ -9,11 +9,12 @@ const (
 
 //Stream ...
 type Stream struct {
-	ID          uint32
-	MetaHeaders map[string]string
-	Path        string
-	Type        int
-	GrpcState   GrpcState
+	ID                  uint32
+	MetaHeaders         map[string]string
+	Path                string
+	Type                int
+	GrpcState           GrpcState
+	ResponseGrpcMessage interface{}
 }
 
 type GrpcState struct {
