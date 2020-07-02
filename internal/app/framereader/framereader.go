@@ -81,7 +81,7 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 
 		stream, _ := frameReader.Streams.Get(connKey, streamID)
 
-		grpcMessage, err := grpc.Decode(stream.Path, frame, stream.Type)
+		grpcMessage, err := grpc.Decode(stream.Path, frame, stream.Type, &stream.GrpcState)
 		if err != nil {
 			return nil, err
 		}

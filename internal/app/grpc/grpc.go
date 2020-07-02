@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 
+	"github.com/rmedvedev/grpcdump/internal/app/models"
 	"github.com/rmedvedev/grpcdump/internal/app/protoprovider"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/http2"
@@ -15,11 +16,15 @@ const (
 )
 
 //Decode to decode proto messages
-func Decode(path string, frame *http2.DataFrame, side int) (interface{}, error) {
+func Decode(path string, frame *http2.DataFrame, side int, state *models.GrpcState) (interface{}, error) {
 	var dataBuf bytes.Buffer
 	buf := frame.Data()
 	if len(buf) == 0 {
 		return nil, nil
+	}
+
+	if state.IsPartialRead {
+		buf = append(state.Buf, buf...)
 	}
 
 	streamID := frame.Header().StreamID
@@ -40,8 +45,14 @@ func Decode(path string, frame *http2.DataFrame, side int) (interface{}, error) 
 	}
 
 	if length != dataBuf.Len() {
+		state.IsPartialRead = true
+		state.Buf = buf
+
 		return nil, nil
 	}
+
+	state.IsPartialRead = false
+	state.Buf = nil
 
 	data := dataBuf.Bytes()
 

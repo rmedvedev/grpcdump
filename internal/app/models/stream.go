@@ -13,4 +13,10 @@ type Stream struct {
 	MetaHeaders map[string]string
 	Path        string
 	Type        int
+	GrpcState   GrpcState
+}
+
+type GrpcState struct {
+	IsPartialRead bool
+	Buf           []byte
 }
