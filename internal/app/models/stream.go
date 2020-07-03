@@ -9,8 +9,15 @@ const (
 
 //Stream ...
 type Stream struct {
-	ID          uint32
-	MetaHeaders map[string]string
-	Path        string
-	Type        int
+	ID                  uint32
+	MetaHeaders         map[string]string
+	Path                string
+	Type                int
+	GrpcState           GrpcState
+	ResponseGrpcMessage interface{}
+}
+
+type GrpcState struct {
+	IsPartialRead bool
+	Buf           []byte
 }
