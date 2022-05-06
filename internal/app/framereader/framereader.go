@@ -50,6 +50,7 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 					ID:   streamID,
 					Path: hf.Value,
 					Type: models.RequestType,
+					MetaHeaders: make(map[string]string),
 				}
 
 				frameReader.Streams.Add(
@@ -62,6 +63,7 @@ func (frameReader *FrameReader) Read(packet *models.Packet) (models.RenderModel,
 				stream = &models.Stream{
 					ID:   streamID,
 					Type: models.ResponseType,
+					MetaHeaders: make(map[string]string),
 				}
 
 				if path, ok := frameReader.paths.Load(packet.GetRevConnectionKey()); ok {
